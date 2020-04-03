@@ -1,0 +1,35 @@
+int x = 0;
+int led_rojo = 2;
+int led_verde = 4;
+int led_amarillo = 6;
+
+int confirmation = 0;
+
+int button_input = 5;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(led_rojo, OUTPUT);
+  pinMode(led_verde, OUTPUT);
+  pinMode(led_amarillo, OUTPUT);
+  pinMode(button_input, INPUT);
+}
+
+void welcome(){
+  digitalWrite(x, HIGH);
+  delay(1000);
+  digitalWrite(x, LOW);
+  delay(1000);
+  x = x + 1;
+  if (x == 3){
+    x = x + 0;
+  }
+}
+
+void loop() {
+  confirmation == digitalRead(button_input);
+  if (confirmation == true){
+    welcome();
+  }
+  else{}
+}
