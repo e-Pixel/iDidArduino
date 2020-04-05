@@ -1,7 +1,14 @@
-int x = 0;
-int led_rojo = 2;
-int led_verde = 4;
-int led_amarillo = 6;
+/*
+  Mario Kart (Still in progress... Wahoo!)
+*/
+
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(4,5,6,7,8,9);
+
+int x = 0; // for welcome function 
+int led_rojo = 0;
+int led_verde = 1;
+int led_amarillo = 2;
 
 int confirmation = 0;
 
@@ -13,6 +20,7 @@ void setup() {
   pinMode(led_verde, OUTPUT);
   pinMode(led_amarillo, OUTPUT);
   pinMode(button_input, INPUT);
+  lcd.begin(16,1);
 }
 
 void welcome(){
@@ -21,8 +29,9 @@ void welcome(){
   digitalWrite(x, LOW);
   delay(1000);
   x = x + 1;
-  if (x == 3){
+  if (x >= 2){
     x = x + 0;
+    digitalWrite(x, LOW);
   }
 }
 
@@ -30,6 +39,7 @@ void loop() {
   confirmation == digitalRead(button_input);
   if (confirmation == true){
     welcome();
+    lcd.print("Welcome to Mario Kart!");
   }
   else{}
 }
