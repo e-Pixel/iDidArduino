@@ -1,26 +1,27 @@
 /*
-  Mario Kart (Still in progress... Wahoo!)
+  Traffic Light (Still in Progress)
 */
 
-#include <LiquidCrystal.h>
-LiquidCrystal lcd(4,5,6,7,8,9);
+const int ultrasonic_sensor = 5;
 
-int x = 0; // for welcome function 
-int led_rojo = 0;
-int led_verde = 1;
-int led_amarillo = 2;
+const int led_red = 1;
+const int led_amarillo = 2;
+const int led_verde = 3;
+const int trigPin = 9;
 
-int confirmation = 0;
+long duration;
+int distance;
 
-int button_input = 5;
+int welc = 0; // para el void loop()
+int x = 1; // para el void welcome()
 
-void setup() {
+void setup(){
   Serial.begin(9600);
-  pinMode(led_rojo, OUTPUT);
+  pinMode(led_red, OUTPUT);
   pinMode(led_verde, OUTPUT);
   pinMode(led_amarillo, OUTPUT);
-  pinMode(button_input, INPUT);
-  lcd.begin(16,1);
+  pinMode(ultrasonic_sensor, INPUT);
+  pinMode(trigPin, OUTPUT);
 }
 
 void welcome(){
@@ -33,13 +34,39 @@ void welcome(){
     x = x + 0;
     digitalWrite(x, LOW);
   }
+  else{}
 }
 
-void loop() {
-  confirmation == digitalRead(button_input);
-  if (confirmation == true){
+void w_test(){ // just a test, not to be taken seriously (and definitely not to be used!)
+  digitalWrite(led_red, HIGH);
+  delay(1000);
+  digitalWrite(led_red, LOW);
+  delay(1000);
+  digitalWrite(led_amarillo, HIGH);
+  delay(1000);
+  digitalWrite(led_amarillo, LOW);
+  delay(1000);
+  digitalWrite(led_verde, HIGH);
+  delay(1000);
+  digitalWrite(led_verde, LOW);
+  delay(1000);
+}
+
+void loop(){
+// fill
+  welc = welc + 1;
+  while (welc <= 3){
     welcome();
-    lcd.print("Welcome to Mario Kart!");
   }
-  else{}
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin on HIGH state for 10 micro seconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(ultrasonic_sensor, HIGH);
+  // Calculating the distance
+  distance= duration*0.034/2;
+  Serial.print(distance);
 }
