@@ -2,19 +2,14 @@
 #define echoPin 11
 #define trigPin 12
 
+const int led_rojo = 1;
+const int led_verde = 13;
+
 // Array multidimensional para mostrar los números
 byte  numero[10][8] =
 {
-/*0*/ {0,0,0,0,0,0,1},
+/*0*/ {0,0,0,0,0,0,0},
 /*1*/ {1,0,0,1,1,1,1},
-/*2*/ {0,0,1,0,0,1,0},
-/*3*/ {0,0,0,0,1,1,0},
-/*4*/ {1,0,0,1,1,0,0},
-/*5*/ {0,1,0,0,1,0,0},
-/*6*/ {0,1,0,0,0,0,0},
-/*7*/ {0,0,0,1,1,1,1},
-/*8*/ {0,0,0,0,0,0,0},
-/*9*/ {0,0,0,0,1,0,0}
 };
 
 int duration;
@@ -31,7 +26,7 @@ void medir_distancia(){ // in centimeters
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   duration = pulseIn(echoPin, HIGH);
-  distance_cm = ( duration / 29 ) / 2; //global variable
+  distance_cm = ( duration / 29 ); //global variable
 }
 
 void setup() {
@@ -39,43 +34,43 @@ void setup() {
   Serial.begin(9600);
  
   // Ponemos los pines de los segmentos en modo OUTPUT (salida)
-  for (int i = 2; i < 10; i++)
+  for (int i = 3; i < 10; i++)
   {
     pinMode(i, OUTPUT);
   }
   pinMode(echoPin, INPUT);
   pinMode(trigPin, OUTPUT);
+  pinMode(led_verde, OUTPUT);
   //Establecemos la semilla fija
-  randomSeed(analogRead(A0));
 }
  
 void loop() {
-  // Leemos el valor del pulsador
-  //Genera un numero aleatorio entre 1 y 6
-    // int randomNumber = random(1, 7);
  
     // Ponemos los pines en estado correcto para mostrar el número randomNumber
-    for (int e = 0; e < 8; e++)
+    for (int e = 3; e < 8; e++)
     {
-      int decimal = (distance_cm % 10);
       //Serial.print(decimal);
-      digitalWrite(e + 3, numero[2][e]);
+      tempC = analogRead(pinLM35); 
+      int newTemp = ((tempC * 0.48828125)/6); 
+      // Serial.println(newTemp);
+      if (newTemp > 40) {
+        digitalWrite(e, numero[1][e]);
+      }
+      else { 
+        digitalWrite(e, numero[0][e]);
+      }
     } 
- 
-    delay(500);
     medir_distancia();
     //Serial.println(distance_cm);
+    int decimal = (distance_cm);
 
-      tempC = analogRead(pinLM35); 
-   
-    // Calculamos la temperatura con la fórmula
-    tempC = ((tempC * 0.48828125)/6); 
-  
-    // Envia el dato al puerto serial
-    Serial.print(tempC);
-    // Salto de línea
-    Serial.print("\n");
-    
-    // Esperamos un tiempo para repetir el loop
-    delay(1000);
+    Serial.println(decimal);
+    if (decimal < 50) {
+      digitalWrite(led_rojo, LOW);
+      digitalWrite(led_verde, LOW);
+    }
+    if (decimal > 100){
+      digitalWrite(led_rojo, LOW);
+      digitalWrite(led_verde, HIGH);
+    }
   }
