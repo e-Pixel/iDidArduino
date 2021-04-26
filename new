@@ -20,6 +20,10 @@ byte  numero[10][8] =
 int duration;
 int distance_cm;
 
+// Declaracion de variables globales
+float tempC; // Variable para almacenar el valor obtenido del sensor (0 a 1023)
+int pinLM35 = 0; // Variable del pin de entrada del sensor (A0)
+
 void medir_distancia(){ // in centimeters
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -54,11 +58,24 @@ void loop() {
     for (int e = 0; e < 8; e++)
     {
       int decimal = (distance_cm % 10);
-      Serial.print(decimal);
+      //Serial.print(decimal);
       digitalWrite(e + 3, numero[2][e]);
     } 
  
     delay(500);
     medir_distancia();
-    Serial.println(distance_cm);
+    //Serial.println(distance_cm);
+
+      tempC = analogRead(pinLM35); 
+   
+    // Calculamos la temperatura con la fórmula
+    tempC = ((tempC * 0.48828125)/6); 
+  
+    // Envia el dato al puerto serial
+    Serial.print(tempC);
+    // Salto de línea
+    Serial.print("\n");
+    
+    // Esperamos un tiempo para repetir el loop
+    delay(1000);
   }
