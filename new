@@ -1,0 +1,64 @@
+#define PULSADOR 10
+#define echoPin 11
+#define trigPin 12
+
+// Array multidimensional para mostrar los números
+byte  numero[10][8] =
+{
+/*0*/ {0,0,0,0,0,0,1},
+/*1*/ {1,0,0,1,1,1,1},
+/*2*/ {0,0,1,0,0,1,0},
+/*3*/ {0,0,0,0,1,1,0},
+/*4*/ {1,0,0,1,1,0,0},
+/*5*/ {0,1,0,0,1,0,0},
+/*6*/ {0,1,0,0,0,0,0},
+/*7*/ {0,0,0,1,1,1,1},
+/*8*/ {0,0,0,0,0,0,0},
+/*9*/ {0,0,0,0,1,0,0}
+};
+
+int duration;
+int distance_cm;
+
+void medir_distancia(){ // in centimeters
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance_cm = ( duration / 29 ) / 2; //global variable
+}
+
+void setup() {
+  // Iniciamos el monitor serie
+  Serial.begin(9600);
+ 
+  // Ponemos los pines de los segmentos en modo OUTPUT (salida)
+  for (int i = 2; i < 10; i++)
+  {
+    pinMode(i, OUTPUT);
+  }
+  pinMode(echoPin, INPUT);
+  pinMode(trigPin, OUTPUT);
+  //Establecemos la semilla fija
+  randomSeed(analogRead(A0));
+}
+ 
+void loop() {
+  // Leemos el valor del pulsador
+  //Genera un numero aleatorio entre 1 y 6
+    // int randomNumber = random(1, 7);
+ 
+    // Ponemos los pines en estado correcto para mostrar el número randomNumber
+    for (int e = 0; e < 8; e++)
+    {
+      int decimal = (distance_cm % 10);
+      Serial.print(decimal);
+      digitalWrite(e + 3, numero[2][e]);
+    } 
+ 
+    delay(500);
+    medir_distancia();
+    Serial.println(distance_cm);
+  }
